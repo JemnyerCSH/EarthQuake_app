@@ -1,0 +1,8 @@
+# 忽略虛擬環境、模型和大型檔案
+/cache/
+/eq_venv/
+*.pack
+*.bin
+*.so
+*.pt
+*.onnx

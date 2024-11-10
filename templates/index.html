@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地震應急互動系統</title>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <header>
+        <h1>地震應急互動系統</h1>
+    </header>
+
+    <div class="main-container">
+        <div class="container" id="div1">
+            <h2>地震通知</h2>
+            <div class="notifications-list" id="notifications">
+                <!-- 地震通知內容 -->
+            </div>
+        </div>
+
+        <div class="container" id="div2">
+            <h2>地震模擬互動</h2>
+            <div class="button-container">
+                <button id="startSimulation">開始地震模擬遊戲</button>
+                <button id="askTaide">問地震互動機器人</button>
+            </div>
+            <div id="gameSection" class="content-section hidden">
+                <p id="question"></p>
+                <div id="optionsContainer">
+                </div>
+            </div>
+            <div id="chatSection" class="content-section hidden">
+                <div class="chatbox" id="taideResponse"></div>
+                <div class="input-container">
+                    <input type="text" id="userInput" placeholder="輸入您的回應...">
+                    <button id="sendInput">發送</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="static/script.js"></script>
+</body>
+</html>
