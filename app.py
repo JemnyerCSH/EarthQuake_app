@@ -18,13 +18,13 @@ os.environ["HF_TOKEN"] = "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"
 def load_model():
     tokenizer = AutoTokenizer.from_pretrained(
         "taide/Llama3-TAIDE-LX-8B-Chat-Alpha1", 
-        cache_dir="./cache"
+        cache_dir="./cache",
         use_auth_token=os.getenv("HF_TOKEN")
     )
     model = AutoModelForCausalLM.from_pretrained(
         "taide/Llama3-TAIDE-LX-8B-Chat-Alpha1",
         cache_dir="./cache",
-        use_auth_token=os.getenv("HF_TOKEN")
+        use_auth_token=os.getenv("HF_TOKEN"),
         device_map="balanced", # balanced or auto
         trust_remote_code=True,
         low_cpu_mem_usage=True
