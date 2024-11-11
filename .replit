@@ -1,6 +1,3 @@
-run = "python3 app.py"
-# language = "python"
-# entrypoint = "app.py"
-
-# [nix]
-# pkgs = ["python39", "python39Packages.numpy", "python39Packages.transformers", "python39Packages.flask", "python39Packages.flask-cors"]
+# .replit
+run = "flask run --host=0.0.0.0 --port=5001"
+language = "python3"
