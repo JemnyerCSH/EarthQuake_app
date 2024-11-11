@@ -1,8 +1,18 @@
-# 忽略虛擬環境、模型和大型檔案
-/cache/
-/eq_venv/
+# 忽略虛擬環境
+eq_venv/
+venv/
+.env/
+
+# 忽略 cache 資料夾
+.cache/
+cache/
+
+# 忽略模型和大型檔案
 *.pack
 *.bin
 *.so
 *.pt
 *.onnx
+
+# 忽略 PyTorch 和 TensorFlow 模型的 checkpoint 檔案
+checkpoint/
