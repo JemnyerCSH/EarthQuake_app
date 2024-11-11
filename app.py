@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template, Response
+from flask import Flask, request, jsonify, render_template, Response, render_template
 from flask_cors import CORS
 from transformers import AutoTokenizer, AutoModelForCausalLM
 import torch
@@ -129,6 +129,10 @@ def ask_taide():
             yield f"data: {response_text}\n\n"
     
     return Response(generate_stream(), mimetype="text/event-stream")
+
+# @app.route("/")
+# def home():
+#     return render_template("index.html")
 
 # 主頁（包含前端界面）
 @app.route('/')
