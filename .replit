@@ -1,8 +1,6 @@
-run = "flask run --host=0.0.0.0 --port=5001"
+run = "flask run --host=0.0.0.0 --port=5000"
+language = "python"
+entrypoint = "app.py"
+
 [nix]
-pkgs = [
-    "python39Packages.flask"
-    "python39Packages.flask_cors"
-    "python39Packages.numpy"
-    "python39Packages.transformers"
-]
+pkgs = ["python39", "python39Packages.numpy", "python39Packages.transformers", "python39Packages.flask", "python39Packages.flask-cors"]
