@@ -1,0 +1,8 @@
+run = "flask run --host=0.0.0.0 --port=5000"
+[nix]
+pkgs = [
+    "python39Packages.flask"
+    "python39Packages.flask_cors"
+    "python39Packages.numpy"
+    "python39Packages.transformers"
+]
