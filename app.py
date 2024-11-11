@@ -10,15 +10,17 @@ from questions import questions
 app = Flask(__name__)
 CORS(app)
 
+# cache_dir="/mnt/nas7/m11215117/earthquake_app/cache"
+
 # 加載模型
 def load_model():
     tokenizer = AutoTokenizer.from_pretrained(
         "taide/Llama3-TAIDE-LX-8B-Chat-Alpha1", 
-        cache_dir="/mnt/nas7/m11215117/earthquake_app/cache"
+        cache_dir="./cache"
     )
     model = AutoModelForCausalLM.from_pretrained(
         "taide/Llama3-TAIDE-LX-8B-Chat-Alpha1",
-        cache_dir="/mnt/nas7/m11215117/earthquake_app/cache",
+        cache_dir="./cache",
         device_map="balanced", # balanced or auto
         trust_remote_code=True,
         low_cpu_mem_usage=True
@@ -42,7 +44,7 @@ def generate_response(user_input):
     outputs = model.generate(
         input_ids=inputs["input_ids"],
         attention_mask=attention_mask,
-        max_length=100,
+        max_length=500,
         pad_token_id=tokenizer.eos_token_id
     )
     
