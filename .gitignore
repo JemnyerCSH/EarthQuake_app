@@ -16,3 +16,6 @@ cache/
 
 # 忽略 PyTorch 和 TensorFlow 模型的 checkpoint 檔案
 checkpoint/
+
+__pycache__/
+*.log
