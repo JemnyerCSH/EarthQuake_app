@@ -52,7 +52,7 @@ def generate_response(user_input):
         input_ids=inputs.get("attention_mask"),
         attention_mask=inputs["attention_mask"],
         max_new_token=50,
-        pad_token_id=tokenizer.eos_token_id
+        pad_token_id=tokenizer.eos_token_id,
         do_sample=True,
         top_k=50
     )
