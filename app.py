@@ -46,14 +46,15 @@ def generate_response(user_input):
     
     # 準備輸入並生成 attention_mask
     inputs = tokenizer(prompt, return_tensors="pt", padding=True).to(device)
-    attention_mask = inputs["attention_mask"]
-    
+        
     # 明確傳遞 attention_mask 和 pad_token_id
     outputs = model.generate(
-        input_ids=inputs["input_ids"],
-        attention_mask=attention_mask,
-        max_length=500,
+        input_ids=inputs.get("attention_mask"),
+        attention_mask=inputs["attention_mask"],
+        max_new_token=50,
         pad_token_id=tokenizer.eos_token_id
+        do_sample=True,
+        top_k=50
     )
     
     # 解碼生成的回應
@@ -123,7 +124,7 @@ def ask_taide():
     user_message = data.get("message", "")
     
     if not user_message:
-        taide_response = "你好，很高興為您服務！我是TAIDE，是您現在的地震互動機器人助手，請問您有什麼關於地震的問題需要問我嗎？我會盡我所能為您解惑～"
+        taide_response = "TAIDE: 你好，很高興為您服務！我是TAIDE，是您現在的地震互動機器人助手，請問您有什麼關於地震的問題需要問我嗎？我會盡我所能為您解惑～"
         return jsonify({"response": taide_response})
 
     def generate_stream():
