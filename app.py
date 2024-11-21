@@ -12,7 +12,7 @@ app = Flask(__name__)
 CORS(app)
 
 os.environ["HF_TOKEN"] = "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"
-# cache_dir="/mnt/nas7/m11215117/earthquake_app/cache"
+cache_dir="/content/drive/MyDrive/earthquake_model_cache"
 
 # 加載模型
 def load_model():
@@ -25,7 +25,7 @@ def load_model():
         "taide/Llama3-TAIDE-LX-8B-Chat-Alpha1",
         cache_dir="./cache",
         token=os.getenv("HF_TOKEN"),
-        device_map="balanced", # balanced or auto
+        device_map="auto", # balanced or auto
         trust_remote_code=True,
         low_cpu_mem_usage=True
     )
