@@ -28,9 +28,9 @@ def load_model():
         device_map="auto", # balanced or auto
         offload_folder="./offload",
         offload_state_dict=True,  # 啟用狀態字典卸載
-        trust_remote_code=True,
-        torch_dtype="auto",  # 自動選擇數據類型
-        low_cpu_mem_usage=True
+        torch_dtype="auto"  # 自動選擇數據類型
+        # trust_remote_code=True,
+        # low_cpu_mem_usage=True
     )
     return tokenizer, model
 
