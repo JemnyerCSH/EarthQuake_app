@@ -46,14 +46,16 @@ def generate_response(user_input):
     
     # 準備輸入並生成 attention_mask
     inputs = tokenizer(prompt, return_tensors="pt", padding=True).to(device)
-        
+    attention_mask = inputs["attention_mask"]
+    
     # 明確傳遞 attention_mask 和 pad_token_id
     outputs = model.generate(
         input_ids=inputs.get("attention_mask"),
-        attention_mask=inputs["attention_mask"],
-        pad_token_id=tokenizer.eos_token_id,
+        attention_mask=attention_mask,
+        pad_token_id=tokenizer.eos_token_id,  # 防止 padding 問題
+        # max_length=500,
         do_sample=True,
-        top_k=50
+        top_k=50    # 控制生成多樣性
     )
     
     # 解碼生成的回應
