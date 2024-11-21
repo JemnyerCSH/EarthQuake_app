@@ -54,7 +54,7 @@ document.getElementById('askTaide').addEventListener('click', () => {
     document.getElementById('gameSection').classList.add('hidden');
     document.getElementById('chatSection').classList.remove('hidden');
     const taideResponseContainer = document.getElementById('taideResponse');
-    taideResponseContainer.innerText = "你好，很高興為您服務！我是TAIDE，是您現在的地震互動機器人助手，請問您有什麼關於地震的問題需要問我嗎？我會盡我所能為您解惑～";
+    taideResponseContainer.innerText = "TAIDE: 你好，很高興為您服務！我是TAIDE，是您現在的地震互動機器人助手，請問您有什麼關於地震的問題需要問我嗎？我會盡我所能為您解惑～";
 });
 
 // 發送使用者的問題並顯示在chatbox

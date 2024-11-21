@@ -7,29 +7,33 @@ import random
 import requests
 from questions import questions
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
+HF_TOKEN = os.getenv("HF_TOKEN")
 
 app = Flask(__name__)
 CORS(app)
 
-os.environ["HF_TOKEN"] = "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"
-cache_dir="/content/drive/MyDrive/earthquake_model_cache"
+# cache_dir="./cache"
+# cache_dir="/content/drive/MyDrive/earthquake_model_cache"
+# cache_dir="/mnt/nas7/m11215117/earthquake_app/cache"
 
 # 加載模型
 def load_model():
     tokenizer = AutoTokenizer.from_pretrained(
         "taide/Llama3-TAIDE-LX-8B-Chat-Alpha1", 
-        cache_dir="./cache",
+        cache_dir="/mnt/nas7/m11215117/earthquake_app/cache",
         token=os.getenv("HF_TOKEN")
     )
     model = AutoModelForCausalLM.from_pretrained(
         "taide/Llama3-TAIDE-LX-8B-Chat-Alpha1",
-        cache_dir="./cache",
+        cache_dir="/mnt/nas7/m11215117/earthquake_app/cache",
         token=os.getenv("HF_TOKEN"),
-        max_new_token = 500,
-        device_map="auto",            # 自動分配設備
+        device_map="auto",            # 自動分配設備, auto or balanced
         # offload_folder="./offload",   # 指定卸載文件夾
         # offload_state_dict=True,      # 啟用狀態字典卸載
-        torch_dtype="auto",           # 自動選擇數據類型
+        # torch_dtype="auto",           # 自動選擇數據類型, auto or torch.float32
         trust_remote_code=True,       # 信任遠端代碼
         low_cpu_mem_usage=True        # 降低 CPU 記憶體使用
     )
@@ -42,20 +46,21 @@ def generate_response(user_input):
     device = "cuda" if torch.cuda.is_available() else "cpu"
     
     # 添加提示文字，確保只回答問題
-    prompt = f"回答用戶的問題：{user_input}\n回答："
+    prompt = f"請使用簡單且明確的語言回答以下問題：\n問題：{user_input}\n回答："
     
     # 準備輸入並生成 attention_mask
     inputs = tokenizer(prompt, return_tensors="pt", padding=True).to(device)
-    attention_mask = inputs["attention_mask"]
     
     # 明確傳遞 attention_mask 和 pad_token_id
     outputs = model.generate(
-        input_ids=inputs.get("attention_mask"),
-        attention_mask=attention_mask,
+        input_ids=inputs.input_ids,
+        attention_mask=inputs.attention_mask,
+        max_new_token=500,
         pad_token_id=tokenizer.eos_token_id,  # 防止 padding 問題
-        # max_length=500,
+        pad_token = tokenizer.eos_token,
         do_sample=True,
-        top_k=50    # 控制生成多樣性
+        top_k=10,    # 控制生成多樣性
+        temperature=0.5
     )
     
     # 解碼生成的回應
@@ -125,14 +130,14 @@ def ask_taide():
     user_message = data.get("message", "")
     
     if not user_message:
-        taide_response = "TAIDE: 你好，很高興為您服務！我是TAIDE，是您現在的地震互動機器人助手，請問您有什麼關於地震的問題需要問我嗎？我會盡我所能為您解惑～"
+        taide_response = "你好，很高興為您服務！我是TAIDE，是您現在的地震互動機器人助手，請問您有什麼關於地震的問題需要問我嗎？我會盡我所能為您解惑～"
         return jsonify({"response": taide_response})
 
     def generate_stream():
         inputs = tokenizer(user_message, return_tensors="pt").to(model.device)
-        for output in model.generate(inputs.input_ids, max_new_tokens=50, pad_token_id=tokenizer.eos_token_id, do_sample=True, top_k=50):
-            response_text = tokenizer.decode(output, skip_special_tokens=True)
-            yield f"data: {response_text}\n\n"
+        outputs = model.generate(inputs.input_ids, max_new_tokens=50, pad_token_id=tokenizer.eos_token_id, do_sample=True, top_k=50)
+        response_text = tokenizer.decode(outputs[0], skip_special_tokens=True)
+        yield f"data: {response_text}\n\n"
     
     return Response(generate_stream(), mimetype="text/event-stream")
 
@@ -142,6 +147,7 @@ def index():
     return render_template('index.html')
 
 if __name__ == '__main__':
-    # app.run(debug=True, host="0.0.0.0", port=5001)
-    port = int(os.environ.get("PORT", 5001))
-    app.run(debug=True, host="0.0.0.0", port=port)
+    app.run(debug=True, host="0.0.0.0", port=5001)
+    # port = int(os.environ.get("PORT", 5001))
+    # app.run(debug=True, host="0.0.0.0", port=port)
+    
