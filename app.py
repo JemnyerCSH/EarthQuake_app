@@ -45,36 +45,26 @@ tokenizer, model = load_model()
 def generate_response(user_input):
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
-    # 添加提示文字
-    prompt = f"你是一個地震專家助手，用戶問你：{user_input}\n請用專業和簡潔的語言回答這個問題："
-    model_input = tokenizer(prompt, return_tensors="pt", padding=True, truncation=True).to(device)
+    # 明確定義問題模板
+    knowledge_prompt = f"""
+    你是一個專業地震助手，以下是用戶的問題：
+    問題：{user_input}
+    回答：請清晰且有條理地提供回答，分條列出，幫助用戶快速理解。
+    """
 
-    # 使用模型生成輸出，顯式傳遞 attention_mask
-    generate_ids = model.generate(
-        input_ids=model_input.input_ids,
-        attention_mask=model_input.attention_mask,  # 顯式傳遞 attention_mask
-        max_new_tokens=512,          # 限制新生成 token 的數量
-        pad_token_id=tokenizer.eos_token_id,
-        # do_sample=True,             # 啟用隨機生成
-        top_k=20,                   # 控制生成多樣性
-        temperature=0.5,             # 控制生成的隨機性
-        repetition_penalty=1.2  # 增加重複懲罰，避免重複
+    inputs = tokenizer(knowledge_prompt, return_tensors="pt", padding=True, truncation=True).to(device)
+    outputs = model.generate(
+        input_ids=inputs.input_ids,
+        attention_mask=inputs.attention_mask,
+        max_new_tokens=150,  # 限制生成長度
+        temperature=0.5,     # 控制隨機性
+        top_k=20,            # 限制生成範圍
+        repetition_penalty=1.2,
+        pad_token_id=tokenizer.eos_token_id
     )
 
-    # 過濾掉輸入的部分，保留模型生成的內容
-    generated_outputs = [
-        output_ids[len(input_ids):] 
-        for input_ids, output_ids in zip(model_input.input_ids, generate_ids)
-    ]
-
-    # 將生成的 token 解碼為文本
-    response_texts = [
-        tokenizer.decode(output, skip_special_tokens=True).strip()
-        for output in generated_outputs
-    ]
-
-    # 返回第一個生成的結果（如果是單輸入）
-    return response_texts[0] if response_texts else ""
+    response_text = tokenizer.decode(outputs[0], skip_special_tokens=True).strip()
+    return response_text
 
 # 地震通知數據
 def get_recent_earthquake_notifications():
