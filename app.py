@@ -25,6 +25,7 @@ def load_model():
         "taide/Llama3-TAIDE-LX-8B-Chat-Alpha1",
         cache_dir="./cache",
         token=os.getenv("HF_TOKEN"),
+        max_new_token = 500,
         device_map="auto",            # 自動分配設備
         # offload_folder="./offload",   # 指定卸載文件夾
         # offload_state_dict=True,      # 啟用狀態字典卸載
