@@ -26,11 +26,11 @@ def load_model():
         cache_dir="./cache",
         token=os.getenv("HF_TOKEN"),
         device_map="auto", # balanced or auto
-        offload_folder="./offload",
-        offload_state_dict=True,  # 啟用狀態字典卸載
-        torch_dtype="auto"  # 自動選擇數據類型
-        # trust_remote_code=True,
-        # low_cpu_mem_usage=True
+        # offload_folder="./offload",
+        # offload_state_dict=True,  # 啟用狀態字典卸載
+        # torch_dtype="auto",  # 自動選擇數據類型
+        trust_remote_code=True,
+        low_cpu_mem_usage=True
     )
     return tokenizer, model
 
