@@ -11,7 +11,7 @@ import os
 app = Flask(__name__)
 CORS(app)
 
-os.environ["HF_TOKEN"] = "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"
+os.environ["HF_TOKEN"] = "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"
 cache_dir="/content/drive/MyDrive/earthquake_model_cache"
 
 # 加載模型
