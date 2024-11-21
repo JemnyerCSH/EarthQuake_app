@@ -25,12 +25,12 @@ def load_model():
         "taide/Llama3-TAIDE-LX-8B-Chat-Alpha1",
         cache_dir="./cache",
         token=os.getenv("HF_TOKEN"),
-        device_map="auto", # balanced or auto
-        # offload_folder="./offload",
-        # offload_state_dict=True,  # 啟用狀態字典卸載
-        # torch_dtype="auto",  # 自動選擇數據類型
-        trust_remote_code=True,
-        low_cpu_mem_usage=True
+        device_map="auto",            # 自動分配設備
+        offload_folder="./offload",   # 指定卸載文件夾
+        offload_state_dict=True,      # 啟用狀態字典卸載
+        torch_dtype="auto",           # 自動選擇數據類型
+        trust_remote_code=True,       # 信任遠端代碼
+        low_cpu_mem_usage=True        # 降低 CPU 記憶體使用
     )
     return tokenizer, model
 
