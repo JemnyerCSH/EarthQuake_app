@@ -44,8 +44,8 @@
 2. 打開瀏覽器並訪問 http://127.0.0.1:5001 查看系統。
 
 ## 注意事項
-• 本專案為學術研究及教育用途，不可用於實際地震應急決策。
-• 問答內容來源於地震安全相關資料，建議定期更新以確保準確性。
+1. 本專案為學術研究及教育用途，不可用於實際地震應急決策。
+2. 問答內容來源於地震安全相關資料，建議定期更新以確保準確性。
 
 ## 未來規劃
 1. 增加多語言支持，覆蓋更多國家和地區。
@@ -56,7 +56,7 @@
 如果您對本專案有改進建議或想要提供更多地震情境題，歡迎提交 Pull Request 或聯繫我。
 
 ## 聯絡方式
-• 作者: JemnyerCSH
-• Email: siewhsuan@nlp.csie.ntust.edu.tw
-• GitHub Repo: https://github.com/JemnyerCSH/EarthQuake_app
+1. 作者: JemnyerCSH
+2. Email: siewhsuan@nlp.csie.ntust.edu.tw
+3. GitHub Repo: https://github.com/JemnyerCSH/EarthQuake_app
 
