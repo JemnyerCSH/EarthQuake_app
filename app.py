@@ -70,7 +70,7 @@ def generate_response(user_input):
 
     response_text = tokenizer.decode(outputs[0], skip_special_tokens=True).strip()
     
-    # 過濾掉用戶問題的重複部分
+    # 過濾掉用戶問題的重複部分  # btw還是會重複，哭
     if user_input in response_text:
         response_text = response_text.replace(user_input, "").strip()
         
