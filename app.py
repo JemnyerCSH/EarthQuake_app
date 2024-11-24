@@ -35,7 +35,8 @@ def load_model():
         # offload_state_dict=True,      # 啟用狀態字典卸載
         # torch_dtype="auto",           # 自動選擇數據類型, auto or torch.float32
         trust_remote_code=True,       # 信任遠端代碼
-        low_cpu_mem_usage=True        # 降低 CPU 記憶體使用
+        low_cpu_mem_usage=True,        # 降低 CPU 記憶體使用
+        # load_in_4bit=True
     )
     return tokenizer, model
 
@@ -43,27 +44,36 @@ tokenizer, model = load_model()
 
 # 使用模型生成回應
 def generate_response(user_input):
-    device = "cuda" if torch.cuda.is_available() else "cpu"
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-    # 明確定義問題模板
     knowledge_prompt = f"""
-    你是一個專業地震助手，以下是用戶的問題：
+    你是一個專業的地震應急助手，回答用戶問題時，請遵守以下原則：
+    1. 不要重複用戶的問題。
+    2. 提供具體且直接的答案，避免無意義或多餘的文字。
+    3. 如果可能，分條列出答案，簡潔清晰。
     問題：{user_input}
-    回答：請清晰且有條理地提供回答，分條列出，幫助用戶快速理解。
+    回答：
     """
 
-    inputs = tokenizer(knowledge_prompt, return_tensors="pt", padding=True, truncation=True).to(device)
+    prompt = tokenizer.apply_chat_template(knowledge_prompt, tokenize=False, add_generation_prompt=True)
+
+    inputs = tokenizer(prompt, return_tensors="pt", padding=True, truncation=True).to(device)
     outputs = model.generate(
         input_ids=inputs.input_ids,
         attention_mask=inputs.attention_mask,
-        max_new_tokens=150,  # 限制生成長度
-        temperature=0.5,     # 控制隨機性
-        top_k=20,            # 限制生成範圍
-        repetition_penalty=1.2,
+        max_new_tokens=1500,  # 限制生成長度
+        temperature=0.7,     # 控制隨機性
+        top_k=50,            # 限制生成範圍
+        repetition_penalty=1.1,
         pad_token_id=tokenizer.eos_token_id
     )
 
     response_text = tokenizer.decode(outputs[0], skip_special_tokens=True).strip()
+    
+    # 過濾掉用戶問題的重複部分
+    if user_input in response_text:
+        response_text = response_text.replace(user_input, "").strip()
+        
     return response_text
 
 # 地震通知數據
@@ -133,7 +143,7 @@ def ask_taide():
 
     def generate_stream():
         inputs = tokenizer(user_message, return_tensors="pt").to(model.device)
-        outputs = model.generate(inputs.input_ids, max_new_tokens=50, pad_token_id=tokenizer.eos_token_id, do_sample=True, top_k=50)
+        outputs = model.generate(inputs.input_ids, attention_mask=inputs.attention_mask, max_new_tokens=1500, pad_token_id=tokenizer.eos_token_id, do_sample=True, top_k=50)
         response_text = tokenizer.decode(outputs[0], skip_special_tokens=True)
         yield f"data: {response_text}\n\n"
     
