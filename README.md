@@ -36,6 +36,7 @@
    ```bash
    pip install -r requirements.txt
 2. 確保您已安裝 Python 3.8+ 並設定 Hugging Face 模型所需的環境。
+3. 確保您已經有取得 Hugging Face 所需的 Token，並將它設定成變數名稱 HF_TOKEN。（可以開啟一個.env檔保存您的 TOKEN，這樣可以有效的提高隱私性）
 
 ### 啟動伺服器
 1. 啟動 Flask 伺服器：
